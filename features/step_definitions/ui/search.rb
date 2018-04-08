@@ -6,39 +6,32 @@ require 'selenium-webdriver'
 require 'rspec'
 
 When (/^I open the webpage from browser$/) do
-
-  @driver = Selenium::WebDriver.for :chrome
-  @driver.navigate.to "http://www.google.com/"
+  @driver = SearchPage.new("http://www.google.com/", "chrome")
 end
 
 When (/^I open the webpage from (.*) browser$/) do |browser_name|
-  @driver = Selenium::WebDriver.for :"#{browser_name}"
-  @driver.navigate.to "http://www.google.com/"
+  @driver = SearchPage.new("http://www.google.com/", browser_name)
 end
 
 Then (/^I should see (.*) displayed$/) do |attribute|
   case (attribute)
     when 'search box'
-      @driver.find_element(:name, 'q').displayed?
+      @driver.find_searchbox.displayed?
     when 'search button'
-      @driver.find_element(:name,'btnK').displayed?
+      @driver.find_search_button.displayed?
   end
 end
 
 Then (/^I type (.*) in search box$/) do |keyword|
-  @q = @driver.find_element(:name, 'q')
+  @q = @driver.find_searchbox
   @element = @q.send_keys(keyword)
 end
 
 Then (/^I click on the search button$/) do
-  @driver.find_element(:name, 'btnG').submit
+  @driver.find_search_button.submit
 end
 
 And (/^I should see displayed results contain (.*)$/) do |keyword|
-  @driver.find_element(:id, 'rhs').text.include? keyword
-  @driver.quit
-end
-
-And (/^I should see browser url includes (.*)/) do |keyword|
-  @element.submit
+  @driver.display_result.text.include? keyword
+  @driver.close_browser
 end
