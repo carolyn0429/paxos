@@ -1,6 +1,3 @@
-# Dataiku test
-# Author: Carolyn Hung
-# created at : Mar 27, 2018
 require 'rspec'
 require 'cucumber'
 require 'rest-client'
